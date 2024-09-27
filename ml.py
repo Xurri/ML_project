@@ -7,6 +7,8 @@ import seaborn as sns
 import joblib
 from category_encoders import TargetEncoder
 from sklearn.preprocessing import StandardScaler
+import sklearn
+sklearn.set_config(transform_output='pandas')
 
 # Настройка страницы Streamlit
 st.set_page_config(page_title="House Price Prediction App", layout="wide")
@@ -48,9 +50,9 @@ if uploaded_file is not None:
     # Чтение загруженного файла
     input_data = pd.read_csv(uploaded_file)
 
-    # # Удаление столбца 'Id', если он есть
-    # if 'Id' in input_data.columns:
-    #     input_data = input_data.drop(['Id'], axis=1)
+    # Удаление столбца 'Id', если он есть
+    if 'Id' in input_data.columns:
+        input_data = input_data.drop(['Id'], axis=1)
 
     # Определение числовых и категориальных колонок
     numeric_columns = input_data.select_dtypes(include=['number']).columns.tolist()
@@ -92,13 +94,13 @@ if uploaded_file is not None:
     ax[0].set_title("Distribution of Predicted House Prices")
     ax[0].set_xlabel("Predicted Sale Price")
 
-    # График 2: Scatter plot реальных против предсказанных (если есть реальные значения)
-    if 'SalePrice' in input_data.columns:
-        true_prices = np.expm1(input_data['SalePrice'])  # Обратное преобразование, если SalePrice в данных
-        sns.scatterplot(x=true_prices, y=predictions, ax=ax[1], color='purple')
-        ax[1].set_xlabel("Actual Sale Price")
-        ax[1].set_ylabel("Predicted Sale Price")
-        ax[1].set_title("Actual vs Predicted Sale Prices")
+    # # График 2: Scatter plot реальных против предсказанных (если есть реальные значения)
+    # if 'SalePrice' in input_data.columns:
+    #     true_prices = np.expm1(input_data['SalePrice'])  # Обратное преобразование, если SalePrice в данных
+    #     sns.scatterplot(x=true_prices, y=predictions, ax=ax[1], color='purple')
+    #     ax[1].set_xlabel("Actual Sale Price")
+    #     ax[1].set_ylabel("Predicted Sale Price")
+    #     ax[1].set_title("Actual vs Predicted Sale Prices")
 
     # Отображение графиков
     st.pyplot(fig)
